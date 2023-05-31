@@ -221,6 +221,20 @@ impl EditorView {
             statusline::RenderContext::new(editor, doc, view, is_focused, &self.spinners);
 
         statusline::render(&mut context, statusline_area, surface);
+
+        if is_focused {
+            let _ = crossterm::execute!(
+                std::io::stdout(),
+                crossterm::terminal::SetTitle(format!(
+                    "hx {}",
+                    doc.relative_path()
+                        .as_deref()
+                        .unwrap_or(std::path::Path::new("[scratch]"))
+                        .to_str()
+                        .unwrap()
+                ))
+            );
+        }
     }
 
     pub fn render_rulers(
